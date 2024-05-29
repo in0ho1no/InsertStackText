@@ -14,6 +14,10 @@ export function activate(context: vscode.ExtensionContext) {
 			const position = editor.selection.active;
 			editor.edit(editBuilder => {
 				editBuilder.insert(position, insertString);
+			}).then(() => {
+				// テキスト挿入後にカーソルを移動
+				const newPosition = new vscode.Position(position.line + 1, 0); // 次の行の先頭
+				editor.selection = new vscode.Selection(newPosition, newPosition);
 			});
 		}
 	});
