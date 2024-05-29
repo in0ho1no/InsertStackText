@@ -16,6 +16,17 @@
       {
         "command": "insert-stack-text.helloWorld",
         "title": "Hello World"
+      },
+      {
+        "command": "insert-stack-text.insertText",
+        "title": "Insert Text"
+      }
+    ],
+    "keybindings": [
+      {
+        "command": "insert-stack-text.insertText",
+        "key": "ctrl+shift+/",
+        "when": "editorTextFocus"
       }
     ]
   },

@@ -20,6 +20,18 @@ export function activate(context: vscode.ExtensionContext) {
 	});
 
 	context.subscriptions.push(disposable);
+
+	// テキストを挿入する
+	let insertTextCommand = vscode.commands.registerCommand('insert-stack-text.insertText', () => {
+		const editor = vscode.window.activeTextEditor;
+		if (editor) {
+			const position = editor.selection.active;
+			editor.edit(editBuilder => {
+				editBuilder.insert(position, '特定の文字列');
+			});
+		}
+	});
+	context.subscriptions.push(insertTextCommand);
 }
 
 // This method is called when your extension is deactivated
