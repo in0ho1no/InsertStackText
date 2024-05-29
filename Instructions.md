@@ -21,3 +21,5 @@
         ? Initialize a git repository? No
         ? Which bundler to use? webpack
         ? Which package manager to use? npm
+
+1. デバッグしやすいように生成されたフォルダをカレントフォルダ内に展開する
