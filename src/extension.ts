@@ -25,12 +25,29 @@ export function activate(context: vscode.ExtensionContext) {
 
 	// 挿入する文字列を設定する
 	let setInsertStringCommand = vscode.commands.registerCommand('insert-stack-text.setInsertString', async () => {
-		const input = await vscode.window.showInputBox({
-			placeHolder: "Enter the string to insert"
+		// 履歴の情報を取得
+		const insertStrings = vscode.workspace.getConfiguration().get<string[]>('insert-stack-text.insertStrings', []);
+		
+		// 新規追加用の選択肢を追加
+		const quickPickItems: vscode.QuickPickItem[] = insertStrings.map(str => ({ label: str }));
+		quickPickItems.push({ label: 'New Entry', alwaysShow: true });
+
+		const selected = await vscode.window.showQuickPick(quickPickItems, {
+			placeHolder: 'Select Insert Text',
 		});
-		if (input !== undefined) {
-			await vscode.workspace.getConfiguration().update('insert-stack-text.insertString', input, true);
-			vscode.window.showInformationMessage(`The string to insert was set to "${input}"`);
+
+		if (selected && selected.label === 'New Entry') {
+
+			const input = await vscode.window.showInputBox({
+				placeHolder: "Enter the string to insert"
+			});
+			if (input !== undefined) {
+				updateInsertStrings(input);
+			}
+		} else if (selected) {
+			updateInsertString(selected.label)
+		} else {
+			// 何もしない
 		}
 	});
 	context.subscriptions.push(setInsertStringCommand);
@@ -38,3 +55,24 @@ export function activate(context: vscode.ExtensionContext) {
 
 // This method is called when your extension is deactivated
 export function deactivate() {}
+
+// 文字列リストを更新する
+function updateInsertStrings(newString: string) {
+	const config = vscode.workspace.getConfiguration();
+
+	let insertStrings = config.get<string[]>('insert-stack-text.insertStrings', []);
+	if (!insertStrings.includes(newString)) {
+		if (insertStrings.length >= 10) {
+			insertStrings.shift(); // 最古の履歴を削除
+		}
+		insertStrings.unshift(newString);
+		config.update('insert-stack-text.insertStrings', insertStrings, true);
+	}
+	updateInsertString(newString)
+}
+
+// 挿入する文字列を更新する
+function updateInsertString(newString: string) {
+	vscode.workspace.getConfiguration().update('insert-stack-text.insertString', newString, true);
+	vscode.window.showInformationMessage(`The string to insert was set to "${newString}"`);
+}

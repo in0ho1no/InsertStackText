@@ -26,6 +26,11 @@
           "type": "string",
           "default": "",
           "description": "Set the string to be inserted."
+        },
+        "insert-stack-text.insertStrings": {
+          "type": "array",
+          "default": [],
+          "description": "Insert string history"
         }
       }
     },
