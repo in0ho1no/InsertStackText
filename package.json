@@ -12,16 +12,35 @@
   "activationEvents": [],
   "main": "./dist/extension.js",
   "contributes": {
+    "configuration": {
+      "type": "object",
+      "properties": {
+        "insert-stack-text.insertString": {
+          "type": "string",
+          "default": "",
+          "description": "Set the string to be inserted."
+        }
+      }
+    },
     "commands": [
       {
         "command": "insert-stack-text.insertText",
         "title": "Insert Text"
+      },
+      {
+        "command": "insert-stack-text.setInsertString",
+        "title": "Set Insert String"
       }
     ],
     "keybindings": [
       {
         "command": "insert-stack-text.insertText",
         "key": "ctrl+shift+/",
+        "when": "editorTextFocus"
+      },
+      {
+        "command": "insert-stack-text.setInsertString",
+        "key": "ctrl+shift+i",
         "when": "editorTextFocus"
       }
     ]

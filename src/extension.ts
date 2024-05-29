@@ -8,15 +8,28 @@ export function activate(context: vscode.ExtensionContext) {
 
 	// テキストを挿入する
 	let insertTextCommand = vscode.commands.registerCommand('insert-stack-text.insertText', () => {
+		const insertString = vscode.workspace.getConfiguration().get<string>('insert-stack-text.insertString', '');
 		const editor = vscode.window.activeTextEditor;
 		if (editor) {
 			const position = editor.selection.active;
 			editor.edit(editBuilder => {
-				editBuilder.insert(position, '特定の文字列');
+				editBuilder.insert(position, insertString);
 			});
 		}
 	});
 	context.subscriptions.push(insertTextCommand);
+
+	// 挿入する文字列を設定する
+	let setInsertStringCommand = vscode.commands.registerCommand('insert-stack-text.setInsertString', async () => {
+		const input = await vscode.window.showInputBox({
+			placeHolder: "Enter the string to insert"
+		});
+		if (input !== undefined) {
+			await vscode.workspace.getConfiguration().update('insert-stack-text.insertString', input, true);
+			vscode.window.showInformationMessage(`The string to insert was set to "${input}"`);
+		}
+	});
+	context.subscriptions.push(setInsertStringCommand);
 }
 
 // This method is called when your extension is deactivated
