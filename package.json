@@ -14,10 +14,6 @@
   "contributes": {
     "commands": [
       {
-        "command": "insert-stack-text.helloWorld",
-        "title": "Hello World"
-      },
-      {
         "command": "insert-stack-text.insertText",
         "title": "Insert Text"
       }
