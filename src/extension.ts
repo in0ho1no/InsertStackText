@@ -25,29 +25,48 @@ export function activate(context: vscode.ExtensionContext) {
 
 	// 挿入する文字列を設定する
 	let setInsertStringCommand = vscode.commands.registerCommand('insert-stack-text.setInsertString', async () => {
-		// 履歴の情報を取得
+		// 履歴を取得
 		const insertStrings = vscode.workspace.getConfiguration().get<string[]>('insert-stack-text.insertStrings', []);
 		
-		// 新規追加用の選択肢を追加
-		const quickPickItems: vscode.QuickPickItem[] = insertStrings.map(str => ({ label: str }));
-		quickPickItems.push({ label: 'New Entry', alwaysShow: true });
+		// 選択肢を作成
+		const quickPickItems: vscode.QuickPickItem[] = insertStrings.map(str => ({ label: `$(history) ${str}` }));
+		quickPickItems.push({ label: '$(add) New Entry', alwaysShow: true });
+		quickPickItems.push({ label: '$(trash) Delete Entry', alwaysShow: true });
 
+		// 選択を待つ
 		const selected = await vscode.window.showQuickPick(quickPickItems, {
 			placeHolder: 'Select Insert Text',
 		});
 
-		if (selected && selected.label === 'New Entry') {
-
-			const input = await vscode.window.showInputBox({
-				placeHolder: "Enter the string to insert"
-			});
-			if (input !== undefined) {
-				updateInsertStrings(input);
+		if (selected) {
+			if (selected.label.startsWith('$(add)')) {
+				// 新規追加を待つ
+				const input = await vscode.window.showInputBox({
+					placeHolder: "Enter the string to insert"
+				});
+				if (input !== undefined) {
+					updateInsertStrings(input);
+				}
+			} else if (selected.label.startsWith('$(trash)')) {
+				// 削除用の選択肢を作成
+				const quickPickItems: vscode.QuickPickItem[] = insertStrings.map(str => ({ label: `$(close) ${str}` }));
+				const selected = await vscode.window.showQuickPick(quickPickItems, {
+					placeHolder: 'Select Delete Text',
+				});
+				if (selected) {
+					// 選択されたテキストを削除する
+					const selectText = selected.label.replace('$(close) ', '')
+					const newStrings = insertStrings.filter((el => el !== selectText));
+					vscode.workspace.getConfiguration().update('insert-stack-text.insertStrings', newStrings, true);
+					vscode.window.showInformationMessage(`delete! "${selectText}"`);
+				}
+			} else {
+				// 選択されたテキストを挿入できるようにする
+				const selectText = selected.label.replace('$(history) ', '')
+				updateInsertString(selectText)
 			}
-		} else if (selected) {
-			updateInsertString(selected.label)
 		} else {
-			// 何もしない
+			// 選択されなかったので何もしない
 		}
 	});
 	context.subscriptions.push(setInsertStringCommand);
