@@ -81,11 +81,17 @@ async function handleDeleteEntry(insertStrings: string[]) {
 
 // 文字列リストを更新する
 function updateInsertStrings(insertStrings: string[], newString: string) {
-	if (!insertStrings.includes(newString)) {
-		const newStrings = [newString, ...insertStrings.slice(0, (10 - 1))];
-		vscode.workspace.getConfiguration().update('insert-stack-text.insertStrings', newStrings, true);
+	if (insertStrings.includes(newString)) {
+		updateInsertString(newString);
+	} else {
+		if (insertStrings.length >= 10) {
+			vscode.window.showErrorMessage("History limit reached");
+		} else {
+			const newStrings = [newString, ...insertStrings];
+			vscode.workspace.getConfiguration().update('insert-stack-text.insertStrings', newStrings, true);
+			updateInsertString(newString);
+		}
 	}
-	updateInsertString(newString);
 }
 
 // 選択されたテキストを挿入できるようにする
