@@ -2,7 +2,7 @@
   "name": "insert-stack-text",
   "displayName": "Insert Stack Text",
   "description": "This extension that allows you to store multiple texts in a stack and easily insert them using shortcuts or commands.",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "engines": {
     "vscode": "^1.89.0"
   },
@@ -26,6 +26,11 @@
           "type": "string",
           "default": "",
           "description": "Set the string to be inserted."
+        },
+        "insert-stack-text.insertStrings": {
+          "type": "array",
+          "default": [],
+          "description": "Insert string history"
         }
       }
     },
