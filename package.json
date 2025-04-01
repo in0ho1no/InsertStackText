@@ -4,7 +4,7 @@
   "description": "This extension that allows you to store multiple texts in a stack and easily insert them using shortcuts or commands.",
   "version": "0.0.3",
   "engines": {
-    "vscode": "^1.89.0"
+    "vscode": "^1.98.0"
   },
   "categories": [
     "Other"
