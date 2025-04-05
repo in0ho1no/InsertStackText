@@ -74,7 +74,7 @@
     "@types/node": "22.x",
     "@typescript-eslint/eslint-plugin": "^8.29.0",
     "@typescript-eslint/parser": "^8.29.0",
-    "eslint": "^9.23.0",
+    "eslint": "^9.24.0",
     "typescript": "^5.4.5",
     "ts-loader": "^9.5.2",
     "webpack": "^5.98.0",
